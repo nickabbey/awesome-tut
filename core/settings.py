@@ -43,7 +43,9 @@ INSTALLED_APPS = [
     'allauth',
     'allauth.account',
     'allauth.socialaccount',
+    'django_cleanup.apps.CleanupConfig',
     'posts',
+    'a_users'
 ]
 
 SITE_ID = 1
