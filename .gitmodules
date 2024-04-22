@@ -1,3 +1,6 @@
 [submodule "templates/awesome"]
 	path = templates/awesome
 	url = git@github.com:andyjud/awesome.git
+[submodule "static/awesome-images"]
+	path = static/awesome-images
+	url = https://github.com/andyjud/awesome-images.git
