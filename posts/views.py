@@ -1,4 +1,5 @@
 from django.shortcuts import render, redirect, get_object_or_404
+from django.contrib.auth.decorators import login_required
 from django.forms import ModelForm
 from django.contrib import messages
 from django import forms
@@ -25,7 +26,7 @@ def home_view(request, tag=None):
 
     return render(request, 'posts/home.html', context)
     
-    
+@login_required   
 def post_create_view(request):
     form = PostCreateForm()
 
@@ -53,6 +54,8 @@ def post_create_view(request):
             # like title, convert the first item in the list to text
             artist = find_artist[0].text.strip()
             post.artist = artist
+            
+            post.author = request.user
 
             post.save()
             form.save_m2m()
@@ -60,9 +63,9 @@ def post_create_view(request):
 
     return render(request, 'posts/post_create.html', {'form':form})
 
-
+@login_required
 def post_delete_view(request, pk):
-    post = get_object_or_404(Post, id=pk)
+    post = get_object_or_404(Post, id=pk, author=request.user)
     
     if request.method == 'POST':
         post.delete()
@@ -71,8 +74,9 @@ def post_delete_view(request, pk):
 
     return render(request, 'posts/post_delete.html', {'post':post})
 
+@login_required
 def post_edit_view(request, pk):
-    post = get_object_or_404(Post, id=pk)
+    post = get_object_or_404(Post, id=pk, author=request.user)
     form = PostEditForm(instance=post)
 
     if request.method == 'POST':
