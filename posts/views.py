@@ -1,3 +1,4 @@
+from django.http import HttpResponse
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.forms import ModelForm
@@ -156,6 +157,7 @@ def reply_delete_view(request, pk):
 
     return render(request, 'posts/reply_delete.html', {'reply':reply})
 
+# htmx added here using https://youtu.be/IxGcvqfI_iA?list=PL5E1F5cTSTtTAIw_lBp1hE8nAKfCXgUpW&t=1136
 def like_post(request, pk):
     post = get_object_or_404(Post, id=pk)
     user_exist = post.likes.filter(username=request.user.username).exists()
@@ -166,4 +168,4 @@ def like_post(request, pk):
         else:
             post.likes.add(request.user)
 
-    return redirect('post', post.id)
+    return render(request, 'snippets/likes.html', {'post':post})
