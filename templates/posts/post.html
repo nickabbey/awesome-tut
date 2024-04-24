@@ -32,17 +32,27 @@
                 Comments
                 <span class="font-light text-gray-500 ml-1">{{ post.comments.count }}</span>
                 {% else %}
-                {% if user.is_authenticated %}
-                Add comment
-                {% endif %}
+                    {% if user.is_authenticated %}
+                    Add comment
+                    {% endif %}
                 {% endif %}
             </a>
             <div class="flex items-center gap-4 [&>a:hover]:underline">
                 <div class="flex items-center gap-1">
-                    <img class="w-5 -mt-1" src="https://img.icons8.com/small/24/000000/fire-heart.png">
-                    1
+                    {% if user in post.likes.all %}
+                    <img class="w-4 -mt-1" src="{% static 'awesome-images/fireheart_red.svg' %}">
+                    {% else %}
+                    <img class="w-4 -mt-1" src="{% static 'awesome-images/fireheart.svg' %}">
+                    {% endif %}
+                    {{ post.likes.count }}
                 </div>
-                <a href="">Like</a>
+                {% if user.is_authenticated and user != post.author %}
+                    {% if user in post.likes.all %}
+                    <a href="{% url 'like-post' post.id %}"><b>Liked</b></a>
+                    {% else %}
+                    <a href="{% url 'like-post' post.id %}">Like</a>
+                    {% endif %}
+                    {% endif %}
                 {% if user.is_authenticated and user == post.author %}
                 <a href="{% url 'post-edit' post.id %}">Edit</a>
                 <a href="{% url 'post-delete' post.id %}">Delete</a>
