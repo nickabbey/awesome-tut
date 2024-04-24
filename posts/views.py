@@ -157,15 +157,75 @@ def reply_delete_view(request, pk):
 
     return render(request, 'posts/reply_delete.html', {'reply':reply})
 
-# htmx added here using https://youtu.be/IxGcvqfI_iA?list=PL5E1F5cTSTtTAIw_lBp1hE8nAKfCXgUpW&t=1136
-def like_post(request, pk):
-    post = get_object_or_404(Post, id=pk)
-    user_exist = post.likes.filter(username=request.user.username).exists()
+# decorators explanation https://youtu.be/UOOMn0PeIWM?list=PL5E1F5cTSTtTAIw_lBp1hE8nAKfCXgUpW&t=537
+# skeleton of a decorator
+# def like_toggle(model):
+#     def inner_func(func):
+#         def wrapper(request, *args, **kwargs):
+#             ...
+#             return func(request, *args, **kwargs)
+#         return wrapper
+#     return inner_func
 
-    if post.author != request.user:
-        if user_exist:
-            post.likes.remove(request.user)
-        else:
-            post.likes.add(request.user)
+# decorator declaration
+def like_toggle(model):
+    def inner_func(func):
+        def wrapper(request, *args, **kwargs):
+            post = get_object_or_404(model, id=kwargs.get('pk'))
+            user_exist = post.likes.filter(username=request.user.username).exists()
 
+            if post.author != request.user:
+                if user_exist:
+                    post.likes.remove(request.user)
+                else:
+                    post.likes.add(request.user)
+            return func(request, post)
+        return wrapper
+    return inner_func
+
+
+@login_required
+@like_toggle(Post)
+def like_post(request, post):
     return render(request, 'snippets/likes.html', {'post':post})
+
+
+@login_required
+@like_toggle(Comment)
+def like_comment(request, post):
+    return render(request, 'snippets/likes_comment.html', {'comment':post})
+
+
+@login_required
+@like_toggle(Reply)
+def like_reply(request, post):
+    return render(request, 'snippets/likes_reply.html', {'reply':post})
+
+
+# htmx added here during lesson 13 https://youtu.be/IxGcvqfI_iA?list=PL5E1F5cTSTtTAIw_lBp1hE8nAKfCXgUpW&t=1136
+# this was how it looked before we modified it in lesson 14 to use a decorator.
+# def like_post(request, pk):
+    # post = get_object_or_404(Post, id=pk)
+    # user_exist = post.likes.filter(username=request.user.username).exists()
+
+    # if post.author != request.user:
+    #     if user_exist:
+    #         post.likes.remove(request.user)
+    #     else:
+    #         post.likes.add(request.user)
+
+#     return render(request, 'snippets/likes.html', {'post':post})
+
+# This is how like_comment would be implemented if it were duplicated from like_post
+# def like_comment(request, pk):
+#     comment = get_object_or_404(Comment, id=pk)
+#     user_exist = comment.likes.filter(username=request.user.username).exists()
+
+#     if comment.author != request.user:
+#         if user_exist:
+#             comment.likes.remove(request.user)
+#         else:
+#             comment.likes.add(request.user)
+
+#     return render(request, 'snippets/likes.html', {'comment':comment})
+

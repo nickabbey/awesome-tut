@@ -21,11 +21,7 @@
         </div>
     </div>
     <div class="flex items-center gap-4 [&>a:hover]:underline">
-        <div class="flex items-center gap-1">
-            <img class="w-5 -mt-1" src="https://img.icons8.com/small/24/000000/fire-heart.png">
-            1
-        </div>
-        <a href="">Like</a>
+        {% include 'snippets/likes_reply.html' %}
         <a href="{% url 'reply-delete' reply.id %}">Delete</a>
     </div>
 </reply>
