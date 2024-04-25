@@ -8,6 +8,7 @@ defusedxml==0.7.1
 Django==5.0.4
 django-allauth==0.61.1
 django-cleanup==8.1.0
+django-htmx==1.17.3
 idna==3.7
 oauthlib==3.2.2
 pillow==10.3.0
