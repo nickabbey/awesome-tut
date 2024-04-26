@@ -34,7 +34,7 @@ def home_view(request, tag=None):
     }
 
     if request.htmx:
-        render(request, 'snippets/loop_home_posts.html', context)
+        return render(request, 'snippets/loop_home_posts.html', context)
     
     return render(request, 'posts/home.html', context)
     
