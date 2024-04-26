@@ -4,6 +4,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.forms import ModelForm
 from django.contrib import messages
+from django.core.paginator import Paginator
 from django import forms
 from .models import Post
 from .forms import *
@@ -18,11 +19,23 @@ def home_view(request, tag=None):
     else:
         posts = Post.objects.all()
 
+    paginator = Paginator(posts, 3)
+    page = int(request.GET.get('page', 1))
+
+    try:
+        posts = paginator.page(page)
+    except:
+        return HttpResponse('')
+
     context = {
         'posts' : posts,
         'tag' : tag,
+        'page': page,
     }
 
+    if request.htmx:
+        render(request, 'snippets/loop_home_posts.html', context)
+    
     return render(request, 'posts/home.html', context)
     
 @login_required   

@@ -1,7 +1,4 @@
-{% extends 'layouts/a.html' %}
-
-{% block content %}
-
+<fade-in class="opacity-0" _="on load transition my opacity to 1 over 0.3 seconds">
 {% for post in posts %}
 {% include 'posts/post.html' %}
 {% endfor %}
@@ -13,4 +10,4 @@
     hx-swap="outerHTML">
 </div>
 
-{% endblock %}
+</fade-in>
