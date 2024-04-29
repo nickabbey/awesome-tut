@@ -48,6 +48,7 @@ INSTALLED_APPS = [
     'a_users',
     'django_cleanup.apps.CleanupConfig',
     'a_inbox',
+    'django_extensions',
 ]
 
 SITE_ID = 1
